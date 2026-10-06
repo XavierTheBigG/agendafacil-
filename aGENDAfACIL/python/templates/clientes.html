@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>AgendaFácil - Clientes</title>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f4f6f8;
+            color: #333;
+        }
+
+        /* CABEÇALHO */
+
+        header {
+            background: #1769aa;
+            color: white;
+            padding: 22px 50px;
+        }
+
+        header h1 {
+            font-size: 25px;
+        }
+
+        /* CONTEÚDO */
+
+        .container {
+            width: 90%;
+            max-width: 1100px;
+            margin: 35px auto;
+        }
+
+        .titulo {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .titulo h2 {
+            font-size: 28px;
+            color: #222;
+        }
+
+        /* BOTÕES */
+
+        .btn {
+            border: none;
+            padding: 11px 18px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            color: white;
+        }
+
+        .btn-adicionar {
+            background: #1976d2;
+        }
+
+        .btn-adicionar:hover {
+            background: #125ca0;
+        }
+
+        .btn-editar {
+            background: #6c757d;
+        }
+
+        .btn-excluir {
+            background: #dc3545;
+        }
+
+        /* FORMULÁRIO */
+
+        .formulario {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            margin-bottom: 25px;
+        }
+
+        .formulario h3 {
+            margin-bottom: 18px;
+        }
+
+        .campo {
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            margin-right: 8px;
+            width: 25%;
+        }
+
+        /* TABELA */
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        th {
+            background: #1769aa;
+            color: white;
+            padding: 15px;
+            text-align: left;
+        }
+
+        td {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .acoes {
+            display: flex;
+            gap: 8px;
+        }
+
+        .link-excluir {
+            text-decoration: none;
+        }
+
+        /* RESPONSIVIDADE */
+
+        @media(max-width: 700px) {
+
+            .campo {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+
+            .titulo {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+
+            table {
+                font-size: 13px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<header>
+
+    <h1>AgendaFácil</h1>
+
+</header>
+
+
+<div class="container">
+
+    <div class="titulo">
+
+        <h2>Clientes</h2>
+
+        <button
+            class="btn btn-adicionar"
+            onclick="document.getElementById('nome').focus()">
+
+            + Adicionar
+
+        </button>
+
+    </div>
+
+
+    <div class="formulario">
+
+        <h3>Novo cliente</h3>
+
+        <form action="/adicionar" method="POST">
+
+            <input
+                class="campo"
+                id="nome"
+                type="text"
+                name="nome"
+                placeholder="Nome"
+                required
+            >
+
+            <input
+                class="campo"
+                type="text"
+                name="telefone"
+                placeholder="Telefone"
+                required
+            >
+
+            <input
+                class="campo"
+                type="email"
+                name="email"
+                placeholder="E-mail"
+                required
+            >
+
+            <button
+                class="btn btn-adicionar"
+                type="submit">
+
+                Adicionar
+
+            </button>
+
+        </form>
+
+    </div>
+
+
+    <table>
+
+        <thead>
+
+            <tr>
+
+                <th>ID</th>
+                <th>Nome</th>
+                <th>Telefone</th>
+                <th>E-mail</th>
+                <th>Ações</th>
+
+            </tr>
+
+        </thead>
+
+
+        <tbody>
+
+            {% for cliente in clientes %}
+
+            <tr>
+
+                <td>
+                    {{ cliente.id }}
+                </td>
+
+                <td>
+                    {{ cliente.nome }}
+                </td>
+
+                <td>
+                    {{ cliente.telefone }}
+                </td>
+
+                <td>
+                    {{ cliente.email }}
+                </td>
+
+                <td>
+
+                    <div class="acoes">
+
+                        <button
+                            class="btn btn-editar"
+                            onclick="editarCliente()">
+
+                            Editar
+
+                        </button>
+
+
+                        <a
+                            class="link-excluir"
+                            href="/excluir/{{ cliente.id }}"
+                            onclick="return confirmarExclusao()">
+
+                            <button
+                                type="button"
+                                class="btn btn-excluir">
+
+                                Excluir
+
+                            </button>
+
+                        </a>
+
+                    </div>
+
+                </td>
+
+            </tr>
+
+            {% endfor %}
+
+        </tbody>
+
+    </table>
+
+</div>
+
+
+<script>
+
+function confirmarExclusao() {
+
+    return confirm(
+        "Deseja realmente excluir este cliente?"
+    );
+
+}
+
+
+function editarCliente() {
+
+    alert(
+        "Função de edição selecionada."
+    );
+
+}
+
+</script>
+
+
+</body>
+
+</html>
